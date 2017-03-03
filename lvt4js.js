@@ -164,7 +164,7 @@ LVT.loader = {
         if(LVT.loader.container) return;
         LVT.loader.container = jQuery('<div style="position:fixed;width:100%;height:100%;background-color:rgba(0,0,0,0.23);z-index:20000;display:none;">'+
                 '<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;"><div>'+
-                '<div style="text-align:center;"><img src="https://raw.githubusercontent.com/lvq410/LVT4JS/master/img/loader.gif"></div>'+
+                '<div style="text-align:center;"><img src="https://cdn.rawgit.com/lvq410/LVT4JS/v0.0.1-alpha1/img/loader.gif"></div>'+
                 '<div class="lvt-loader-msger" style="text-align:center;color:white;font-weight:bolder;font-size:xx-large;"></div>'+
                 '</div></div>'+
         '</div>');
