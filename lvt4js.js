@@ -155,6 +155,7 @@ LVT.loader = {
         $('body').prepend(LVT.loader.container);
     },
     show : function(msg){
+        if(msg==null) return;
         LVT.loader.init();
         var loadingMsgObj = LVT.loader.loadingMsgObj(msg);
         LVT.loader.msgs.push(loadingMsgObj);
@@ -162,6 +163,7 @@ LVT.loader = {
         setTimeout('LVT.loader.internalShow()', LVT.loader.threshold);
     },
     immediateShow : function(msg){
+        if(msg==null) return;
         LVT.loader.init();
         var loadingMsgObj = LVT.loader.loadingMsgObj(msg);
         LVT.loader.msgs.push(loadingMsgObj);
@@ -179,6 +181,7 @@ LVT.loader = {
         LVT.loader.container.show();
     },
     hide : function(msg){
+        if(msg==null) return;
         var tmpMsgObj = LVT.loader.loadingMsgObj(msg);
         var loadingMsgObj;
         for(var i=0; i<LVT.loader.msgs.length; i++){
@@ -191,6 +194,23 @@ LVT.loader = {
         loadingMsgObj.ele.remove();
         LVT.loader.msgs = LVT.arr.remove(LVT.loader.msgs, loadingMsgObj);
         if(LVT.loader.msgs.length==0) LVT.loader.container.hide();
+    },
+    change : function(origMsg, msg){
+        if(origMsg==null && msg==null) return;
+        if(origMsg==null) return LVT.loader.immediateShow(msg);
+        if(msg==null) return LVT.loader.hide(origMsg);
+        var tmpMsgObj = LVT.loader.loadingMsgObj(origMsg);
+        var loadingMsgObj;
+        for(var i=0; i<LVT.loader.msgs.length; i++){
+            var msgObj = LVT.loader.msgs[i];
+            if(msgObj.hash!=tmpMsgObj.hash) continue;
+            loadingMsgObj = msgObj;
+            break;
+        }
+        if(loadingMsgObj==null) return LVT.loader.immediateShow(msg);
+        tmpMsgObj = LVT.loader.loadingMsgObj(msg);
+        loadingMsgObj.hash = tmpMsgObj.hash;
+        loadingMsgObj.ele.html(msg);
     }
 };
 if(!Tloader) var Tloader=LVT.loader;
@@ -752,8 +772,10 @@ LVT.form = {
                         console.warn('无法获取', eleInner ,'的值!');
                         continue;
                     }
-                    vals.push(dataType.getter(eleInner, valid));
+                    var val = dataType.getter(eleInner, valid);
                     if(valid.isFail()) return;
+                    if(val==null) continue;
+                    vals.push(val);
                 }
                 var required = LVT.form.dataAttr.required(ele);
                 if(required && vals.length==0) return valid.err(ele);
