@@ -6,11 +6,16 @@
  */
 var LVT = {};
 if(!T) var T = LVT;
+LVT.mUrl = function(){
+    var js = document.scripts;
+    var url =js[js.length - 1].src;
+    return url.substring(0, url.lastIndexOf('/'));
+}();
 /**
  * checkbox联动效果实现
  * 主checkbox添加forgroup参数 子checkbox添加group参数
  * 需要在页面载入完成后调用LVT.cbxRely.init()
- * 页面动态生成从checkbox后也需要调用LVT.cbxRely.init()
+ * 页面动态生成子checkbox后也需要调用LVT.cbxRely.init()
  */
 LVT.cbxRely = {
     changeSub:function(){
@@ -73,7 +78,7 @@ LVT.arr = {
         return tmpArr;
     },
     /**
-     * 从数组删除一个元素，若已有该元素则忽略
+     * 从数组删除一个元素，若没有该元素则忽略
      * @param arr
      * @param ele
      * @returns 删除元素后的数组
@@ -143,7 +148,7 @@ LVT.loader = {
     msger : null,
     msgs : [],
     threshold : 300,
-    gif : 'https://cdn.rawgit.com/lvq410/LVT4JS/v0.0.1-alpha1/img/loader.gif',
+    gif : LVT.mUrl+'/img/loader.gif',
     init : function(){
         if(LVT.loader.container) return;
         LVT.loader.container = jQuery('<div style="position:fixed;width:100%;height:100%;background-color:rgba(0,0,0,0.23);z-index:20000;display:none;">'+
@@ -295,7 +300,7 @@ LVT.obj = {
         }
         return true;
     },
-    /** 判断一个object是否为空 */
+    /** 计算object中键值对的个数 */
     size : function(obj){
         var size = 0;
         for(var key in obj) size++;
@@ -385,15 +390,15 @@ if(!Tjson) var Tjson=LVT.json;
 if(!jQuery.json) jQuery.json=LVT.json;
 
 /** JSON.stringify简化方法名 */
-LVT.jsf = function(obj){
-    return JSON.stringify(obj);
+LVT.jsf = function(obj, replacer, space){
+    return JSON.stringify(obj, replacer, space);
 };
 if(!Tjsf) var Tjsf=LVT.jsf;
 if(!jQuery.jsf) jQuery.jsf=LVT.jsf;
 
 /** 返回参数列表中第一个非空的参数 */
 LVT.fnn = function(){
-    for( var i in arguments){
+    for(var i in arguments){
         var arg = arguments[i];
         if(arg!=null) return arg;
     }
@@ -499,18 +504,21 @@ if(!jQuery.GMKB) jQuery.GMKB=LVT.GMKB;
  */
 LVT.form = {
     deserialize : function(form, data){
-        form.find('.valid-err').text('');
+        var valid=new LVT.form.Valid(form);
+        valid.init();
         var dataType = LVT.form.dataType.type(form, LVT.form.dataType.obj);
         if(!dataType) return;
         dataType.setter(form, data);
     },
-    serialize : function(form){
+    serialize : function(form, errMsgHolder){
+        var valid=new LVT.form.Valid(form);
+        valid.init();
         var dataType = LVT.form.dataType.type(form, LVT.form.dataType.obj);
         if(!dataType) return;
-        var valid=new LVT.form.Valid(form);
         var data = dataType.getter(form, valid);
+        if(valid.isSuccess()) return data;
         valid.show();
-        return data;
+        if(errMsgHolder) errMsgHolder.msg=valid.msg;
     },
     dataType : {
         type : function(ele, def){
@@ -837,6 +845,9 @@ LVT.form = {
             this.msg = msg;
             if(!this.msg) this.msg = LVT.form.dataAttr.err(ele);
         };
+        this.init = function(){
+            this.form.find('.valid-err').text('');
+        };
         this.show = function(){
             var validMsgEle = this.form.find('.valid-err');
             validMsgEle.text(LVT.ig(this.msg));
@@ -903,7 +914,7 @@ jQuery.fn.attrData = function(data){
 };
 
 /** 表单序列化及反序列化 */
-jQuery.fn.formData = function(data){
-    if(data) return LVT.form.deserialize(this, data);
-    return LVT.form.serialize(this);
+jQuery.fn.formData = function(data, errMsgHolder){
+    if(data==null) return LVT.form.serialize(this, errMsgHolder);
+    return LVT.form.deserialize(this, data);
 };

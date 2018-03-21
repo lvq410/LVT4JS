@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LVT4JS Document</title>
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="../lvt4js.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron">
+                <h1>LVT4JS</h1>
+                <p>LVT4JS是笔者在使用Javascript、JQuery期间，对一些常见工具、方法的总结。包括但不限于：复杂表单对象收集、Checkbox联动、全局Loading态、
+                    Toast信息条、时间日期格式化与解析、文件尺寸格式化等等</p>
+            </div>
+        </div>
+    </div>
+    <div class="alert alert-success" role="alert">
+    LVT4JS的所有功能归结在全局的LVT这个对象下，使用方法都是<code>LVT.xxx</code>同时部分功能也提供了简化方法，可以<code>LVT.xxx</code>调用的也可以<code>Txxx</code>形式调用，
+    如timestampFormat调用可以是<code>LVT.timestampFormat()</code>也可以是<code>TtimestampFormat()</code>
+    </div>
+<div>
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#formData" aria-controls="formData" role="tab" data-toggle="tab">Tform</a></li>
+    <li role="presentation"><a href="#checkbox" aria-controls="checkbox" role="tab" data-toggle="tab">Checkbox</a></li>
+    <li role="presentation"><a href="#loading" aria-controls="loading" role="tab" data-toggle="tab">Loading</a></li>
+    <li role="presentation"><a href="#toast" aria-controls="toast" role="tab" data-toggle="tab">Toast</a></li>
+    <li role="presentation"><a href="#others" aria-controls="others" role="tab" data-toggle="tab">杂项</a></li>
+</ul><br>
+<div class="tab-content">
+    <div id="formData" role="tabpanel" class="tab-pane active">
+        <div class="col-md-12">
+            <p class="text-info">
+                Tform：复杂对象收集<br>
+                市面常见的表单收集工具一般仅处理了只有一个层级的表单的数据收集与校验，对于复杂对象，如对象套数组、数组套对象等的收集功能略有欠缺。<br>
+                LVT4JS的Tform功能处理了复杂对象与html标签的映射与数据收集&设置的问题。<br>
+                先看一个简单的例子
+            </p>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">简单复合嵌套数组</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div id="formdata-view1" class="form-horizontal">
+                                <p class="valid-err text-danger col-xs-9 col-xs-offset-2"></p>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">普通文本</label>
+                                    <div class="col-md-10">
+                                        <input name="text" value="HelloWorld" type="text" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">复杂数组</label>
+                                    <div name="arr" data-type="arr" class="col-md-10">
+                                        <div name data-type="obj" style="border:#b7b7b7 1px solid">
+                                            <span style="position:relative;top:-9px;background:#fff;padding:0 10px;left:10px;">数组元素1：对象</span>
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label">普通文本</label>
+                                                <div class="col-md-9">
+                                                    <input name="text" value="'HelloWorld' In Arr" type="text" class="form-control"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label">普通数字</label>
+                                                <div class="col-md-9">
+                                                    <input name="number" value="2018" data-type="int" type="number" class="form-control"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="border:#b7b7b7 1px solid;margin-top: 10px;">
+                                            <span style="position:relative;top:-9px;background:#fff;padding:0 10px;left:10px;">数组元素2：普通浮点数</span>
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label">浮点数字</label>
+                                                <div class="col-md-9">
+                                                    <input name value="13.14" data-type="float" type="number" class="form-control"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="border:#b7b7b7 1px solid;margin-top: 10px;">
+                                            <span style="position:relative;top:-9px;background:#fff;padding:0 10px;left:10px;">数组元素3：日期</span>
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label">日期</label>
+                                                <div class="col-md-9">
+                                                    <input name value="2018-02-14 05:21:00" data-type="date" class="form-control"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <button id="formdata-btn1" onclick="$('#formdata-data1').text(JSON.stringify($('#formdata-view1').formData(),null,2));" type="button" class="btn btn-info btn-block btn-minier" style="margin:10px 0px;line-height:14px;">→数据收集</button>
+                            <pre id="formdata-data1" contenteditable="true" style="min-height:200px;"></pre>
+                            <button onclick="$('#formdata-view1').formData(Tjson($('#formdata-data1').text()))" type="button" class="btn btn-info btn-block btn-minier" style="margin:10px 0px;line-height:14px;">←数据回写</button>
+                        </div>
+                    </div>
+                    <script>$('#formdata-btn1').click();</script>
+                </div>
+                <div class="panel-footer">
+                    上述展示了一个基本的符合嵌套数据收集，表单里包含数组，而数组里又包含对象、数值等。<br>
+                    使用<code>$('#id').formData()</code>即可直接收集数据，使用<code>$('#id').formData(json)</code>即可直接将json对象回写入id指定元素<br>
+                    可尝试修改页面元素的值，点击‘数据收集’来收集修改后的数据，也可修改json数据，点击'数据回写'来回写到页面元素上<br>
+                    按F12观察其原代码，注意观察使用html属性'name'标记的标签。Tform使用html的属性'name'来标识该html标签是需要收集数据的对象，使用'data-type'来标识要收集数据类型是什么。利用html的层级关系来对应复合json对象的层级嵌套关系。
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Tform使用的html属性</div>
+                <div class="panel-body">
+                    <div class="row"><div class="col-md-12">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">name</label>
+                                <div class="col-md-10">
+                                    表示所在元素的数据是否会被Tform所收集。若父级数据类型为对象，则值为所在元素在所收集的对象中的键。若父级数据类型为数组，则值无含义
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">data-type</label>
+                                <div class="col-md-10">
+                                    表示所在元素的数据类型，包括
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">text<span class="text-info">(默认)</span></label>
+                                        <div class="col-md-10">普通文本，若数据类型为此时，可忽略不用为html标签配data-type属性</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">int</label>
+                                        <div class="col-md-10">整数类型</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">float</label>
+                                        <div class="col-md-10">浮点数类型</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">bit</label>
+                                        <div class="col-md-10">布尔型，注意布尔型数据收集利用的是jQuery在input:checkbox上的prop('checked')方法，因此只适用于input:checkbox</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">date</label>
+                                        <div class="col-md-10">日期类型，仅支持收集yyyy-MM-dd HH:mm:ss格式的日期，收集后会转为ISO-8601的时间戳(整型数值)</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">time</label>
+                                        <div class="col-md-10">时长类型，仅支持收集HH:mm/HH:mm:ss格式的时长，收集后会转为毫秒单位时长(整型数值)</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">url</label>
+                                        <div class="col-md-10">url类型，收集后会以文本形式体现</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">obj</label>
+                                        <div class="col-md-10">嵌套类型的支持：对象类型，收集后是一个对象，一般应用在box型标签如div等</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">arr</label>
+                                        <div class="col-md-10">嵌套类型的支持：数组类型，收集后是一个数组，一般应用在列表box型标签如ul,tbody等</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">data-required</label>
+                                <div class="col-md-10">
+                                    表示所在元素的数据是否必须，若被该属性标记，不填时Tform不收集数据并进行异常处理<br>
+                                    注意Tform采用的是最省空间策略，意即当数组/对象中要收集的标签数据未填时，并不会收集该元素。<br>
+                                    数组中收集到的元素的值和对象中收集到的键的值永远不会为null。此属性用在data-type为arr/obj的元素上表示其下所有数据都至少有一个要填写
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">data-range</label>
+                                <div class="col-md-10">
+                                    表示需要校验填写数据的范围，若无则不校验。格式如[floor~ceiling]，前后阈值可为浮点数，前后阈值包含关系，可省略，如'1~10'，'1'，'~20'等，不同的data-type有不同的含义
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">text/url</label>
+                                        <div class="col-md-10">文本长度范围</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">int/float/date/time</label>
+                                        <div class="col-md-10">数值大小范围</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">bit</label>
+                                        <div class="col-md-10">无意义</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">obj</label>
+                                        <div class="col-md-10">对象的键的数量范围</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">arr</label>
+                                        <div class="col-md-10">数值的长度范围</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">data-regex</label>
+                                <div class="col-md-10">
+                                    表示是否需要使用正则校验填写的内容，bit、obj、arr忽略该属性
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">data-err</label>
+                                <div class="col-md-10">
+                                    数据校验不合法时自定义的报错文案，不填遇到错误时会生成个包含元素name值的错误文案
+                                </div>
+                            </div>
+                        </div>
+                    </div></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">错误校验处理</div>
+                <div class="panel-body">
+                    <p class="text-info">
+                        默认情况下在调用<code>$('#id').formData()</code>进行数据收集时，若数据不符合要求(如违反data-required,data-range,data-regex)等，
+                    方法会返回null并在<code>$('#id')</code>下寻找class为'<code>valid-err</code>'的元素并将其内容修改为错误信息(可以是自定义的出错元素的data-err)<br>
+                        若要自定义错误信息的展示方式，调用formData()时传入一个errMsgHolder(空对象等)，如<code>var errMsg = {};$('#id').formData(null, errMsg);alert(errMsg.msg);</code>如果出错会在errMsgHolder的键'msg'上传入错误信息，
+                    拿到该信息后业务代码可自定义展示形式(如alert出来)
+                    </p>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div id="formdata-view2" class="form-horizontal">
+                                <p class="valid-err text-danger col-xs-8 col-xs-offset-4"></p>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">文本长度范围限制小于3，必填</label>
+                                    <div class="col-md-8">
+                                        <input name="range~3" data-required data-range="~3" data-err="文本必填且长度必须小于等于3" value="HelloWorld" type="text" class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <button onclick="$('#formdata-data2').text(JSON.stringify($('#formdata-view2').formData(),null,2));" type="button" class="btn btn-info btn-block btn-minier" style="margin:10px 0px;line-height:14px;">→数据收集,默认错误展示</button>
+                            <button onclick="var errMsg = {};var data = $('#formdata-view2').formData(null, errMsg);if(errMsg.msg){alert(errMsg.msg);}else{$('#formdata-data2').text(data,null,2);}" type="button" class="btn btn-info btn-block btn-minier" style="margin:10px 0px;line-height:14px;">→数据收集,alert错误提示</button>
+                            <pre id="formdata-data2" contenteditable="true" style="min-height:200px;"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">FAQ</div>
+                <div class="panel-body">
+                    <h4 class="text-success">无错误但返回null</h4>
+                    注意Tform采用的是最省空间策略，如果form下所有数据都是可省略的，那么理论上讲应返回空对象{}，此时空对象会被换成null返回
+                    <h4 class="text-success">直接范围指定data-type</h4>
+                    调用<code>$('#id').formData()</code>时，如果$('#id')的data-type标记的不是obj而是arr或者int等，会返回具体data-type标记的数据类型。即调用formData()实际上是把$('#id')作为默认data-type标记为obj的元素来收集数据，而当显式声明了data-type后，默认的obj就失效了。
+                    <h4 class="text-success">回写时数组元素不够</h4>
+                    数组类型元素一个很大的特性是其内容数量是不固定的，Tform并不能做到直接增删页面元素。因此遇到数组类型需要回写时，建议先用业务代码来生成需要数量的页面元素。
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="checkbox" role="tabpanel" class="tab-pane">
+        <div class="col-md-12">
+            <p class="text-info">
+                Checkbox联动<br>
+                主checkbox添加forgroup参数 子checkbox添加group参数<br>
+                需要在页面载入完成后调用LVT.cbxRely.init()<br>
+                页面动态生成子checkbox后也需要调用LVT.cbxRely.init()
+            </p>
+        </div>
+        <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom:0;">
+            <thead><tr>
+                <td style="width:24px"><input type="checkbox" forgroup="cbxStudent"/></td>
+                <td>学生</td>
+            </tr></thead>
+            <tbody>
+                <tr><td><input type="checkbox" group="cbxStudent"/></td>
+                <td>小红</td></tr>
+                <tr><td><input type="checkbox" group="cbxStudent"/></td>
+                <td>小明</td></tr>
+            </tbody>
+        </table>
+        <br>
+        <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom:0;">
+            <thead><tr>
+                <td style="width:24px"><input type="checkbox" forgroup="cbxTeacher"/></td>
+                <td>教师</td>
+            </tr></thead>
+            <tbody>
+                <tr><td><input type="checkbox" group="cbxTeacher"/></td>
+                <td>张三</td></tr>
+                <tr><td><input type="checkbox" group="cbxTeacher"/></td>
+                <td>李四</td></tr>
+            </tbody>
+        </table>
+        <script>LVT.cbxRely.init()</script>
+    </div>
+    <div id="loading" role="tabpanel" class="tab-pane">
+        <div class="col-md-12">
+            <p class="text-info">
+                异步提交时，为防止用户进行重复提交，一个简单粗暴的做法是使用loading态。<br>
+                本工具提供一个简单的loading态实现，<code>LVT.loader.show('等待中')</code>展示loading态，<code>LVT.loader.hide('等待中')</code>隐藏loading态，简化写法<code>Tloader.show()/hide()</code><br>
+            </p>
+        </div>
+        <div class="col-md-12" style="z-index:50000">
+            <div class="col-md-3">
+                <input id="loadingMsg" placeholder="loading-msg" type="text" class="form-control"/>
+            </div>
+            <div class="col-md-3">
+                <button onclick="Tloader.show($('#loadingMsg').val())" class="btn btn-sm btn-info">show</button>
+                <button onclick="Tloader.immediateShow($('#loadingMsg').val())" class="btn btn-sm btn-info">immediateShow</button>
+                <button onclick="Tloader.hide($('#loadingMsg').val())" class="btn btn-sm btn-info">hide</button>
+            </div>
+            <div class="col-md-3">
+                <input id="loadingChangeMsg" placeholder="loading-change-msg" type="text" class="form-control"/>
+            </div>
+            <div class="col-md-3">
+                <button onclick="Tloader.change($('#loadingMsg').val(),$('#loadingChangeMsg').val())" class="btn btn-sm btn-info">change</button>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">属性与方法</div>
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom:0;">
+                    <tbody>
+                        <tr>
+                            <td>gif</td>
+                            <td>展示loading时的图片资源地址，在第一调用show()之前，可替换成其他资源</td>
+                        </tr>
+                        <tr>
+                            <td>threshold</td>
+                            <td>出现loading信息的延迟时间(ms)</td>
+                        </tr>
+                        <tr>
+                            <td>show(msg)</td>
+                            <td>默认的延迟出现loading信息。<br>
+                                一般情况下，点击要执行异步任务的按钮后，不必立刻出现loading态，尤其在异步任务耗时较短时，会造成屏幕闪烁<br>
+                                本方法在调用后延迟<code>threshold</code>后再出现loading信息，在此期间如果调用了<code>hide()</code>则不会再出现loading信息<br>
+                                接收一个文本参数为loading时展示的文本信息，多次调用两个相同的文本信息视为不同的loading态信息
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>immediateShow(msg)</td>
+                            <td>无延时等待直接展示loading态</td>
+                        </tr>
+                        <tr>
+                            <td>hide(msg)</td>
+                            <td>消除一个指定的loading信息，接收一个文本信息，对应show/immediateShow</td>
+                        </tr>
+                        <tr>
+                            <td style="min-width:160px;">change(origMsg, msg)</td>
+                            <td>异步任务在执行期间，有时可能会需要变换loading文案，本方法接收两个文本参数，将第一个文本的loading态文案转成第二个文本。变换后若要<code>hide()</code>，需要传参变换后的文案</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="toast" role="tabpanel" class="tab-pane">
+        <div class="col-md-12">
+            <p class="text-info">
+                出现一个短暂的toast浮条，提示一些信息。用法<code>LVT.toast.show(msg)</code>简化写法<code>Ttoast.show(msg)</code>
+            </p>
+        </div>
+        <div class="col-md-12">
+            <div class="col-md-6">
+                <input id="toastMsg" placeholder="toast-msg" type="text" class="form-control"/>
+            </div>
+            <div class="col-md-6">
+                <button onclick="Ttoast.show($('#toastMsg').val())" class="btn btn-sm btn-info">show</button>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">属性与方法</div>
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom:0;">
+                        <tbody>
+                            <tr>
+                                <td>threshold</td>
+                                <td>toast信息的持续时间(ms),默认1500</td>
+                            </tr>
+                            <tr>
+                                <td>show(msg)</td>
+                                <td>弹出toast，提示msg信息</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="others" role="tabpanel" class="tab-pane">
+        <div class="panel panel-default">
+            <div class="panel-heading">dateRegex　日期格式正则表达式</div>
+            <div class="panel-body">
+                yyyy-MM-dd HH:mm:ss格式的日期时间正则表达式
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">timestampFormat(timestamp)　时间戳日期格式化</div>
+            <div class="panel-body">
+                接收一个时间戳参数，格式化为yyyy-MM-dd HH:mm:ss格式的日期时间
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">date(str[, def])　日期时间解析</div>
+            <div class="panel-body">
+                new Date(str)的替代品，避免其不同浏览器的不兼容<br>
+                满足<br>
+                yyyy<br> yyyy-MM<br> yyyy-MM-dd<br> yyyy-MM-dd HH<br> yyyy-MM-dd HH:mm<br> yyyy-MM-dd HH:mm:ss<br>
+                yyyy-MM-dd HH:mm:ss:sss<br> yyyy-MM-dd HH:mm:ss:sss+08:00<br> yyyy-MM-dd HH:mm:ss:sssZ<br>
+                (日期分割符'-'可以是'/',' '可以是'T',':'可以是',',时区部分忽略不处理)<br>
+                等日期格式转化为时间戳<br> str参数为null或遇到异常返回def
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">timeRegex　时长格式正则表达式</div>
+            <div class="panel-body">
+                HH/HH:mm/HH:mm:ss格式的时长正则表达式
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">time(str[, def])　时长解析</div>
+            <div class="panel-body">
+                接收一个HH/HH:mm/HH:mm:ss格式的时长字符串，解析为毫秒级时长整数值，若格式异常等返回def
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">timeFormat(time)　时长格式化</div>
+            <div class="panel-body">
+                接收一个毫秒单位时间长度参数，格式化为HH:mm:ss格式的时长
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">GMKB(size)　文件数据大小格式化</div>
+            <div class="panel-body">
+                接收一个整形文件/数据大小值，格式化为G/M/K/B的格式
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">ig(obj)　ig即ignore，'null','undefined','NaN'等字符忽略</div>
+            <div class="panel-body">
+                传入obj转为字符串，若obj为null,undefined等字符时，返回''，用于在js代码中拼接html时，产生'null','undefined'等字符
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">igh(obj)　ig进阶，增加html字符转义</div>
+            <div class="panel-body">
+                相比ig方法，如果obj中有html字符如'<','>'等，进行html字符转义，可用于规避XSS攻击等
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">json(jsonStr)　json对象解析</div>
+            <div class="panel-body">
+                json形式字符串解析为json对象，异常返回null
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">jsf(value[, replacer [, space]])　JSON.stringify简化写法</div>
+            <div class="panel-body">
+                json对象序列化
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">fnn(args)　即firstNonNull</div>
+            <div class="panel-body">
+                返回参数中第一个非null的，与||写法相比可避免中间遇到0/''时就应该返回的情况，毕竟0/''!=null
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">int(str, def)　parseInt的包装</div>
+            <div class="panel-body">
+                原始的parseInt会返回NaN,封装一下,遇到NaN时返回def
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">float(str, def)　parseFloat的包装</div>
+            <div class="panel-body">
+                原始的parseFloat会返回NaN,封装一下,遇到NaN时返回def
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">params([url])　解析url后缀的参数</div>
+            <div class="panel-body">
+                url后缀的参数封为一个obj返回，若不填，返回当前页的url的解析
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">uuid()　返回一个UUID</div>
+            <div class="panel-body">
+                纯靠随机生成的uuid格式的uuid，事实上是个伪uuid，但在前端基本够用
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">arr　数组工具集</div>
+            <div class="panel-body">
+                LVT.arr是一个数组方法工具集，提供以下关于数组操作的方法<br>
+                <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom:0;">
+                    <tbody>
+                        <tr>
+                            <td>contains(arr, ele)</td>
+                            <td>利用<code>==</code>判断数组中是否包含元素ele</td>
+                        </tr>
+                        <tr>
+                            <td>add(arr, ele)</td>
+                            <td>向数组添加一个元素，若已有该元素则忽略，采用浅克隆的方法，返回添加过元素的数组，原数组不变</td>
+                        </tr>
+                        <tr>
+                            <td>remove(arr, ele)</td>
+                            <td>从数组删除一个元素，若没该元素则忽略，采用浅克隆的方法，返回删除过元素的数组，原数组不变</td>
+                        </tr>
+                        <tr>
+                            <td>clone(arr)</td>
+                            <td>浅克隆数组</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">obj　对象工具集</div>
+            <div class="panel-body">
+                LVT.obj是一个对象方法工具集，提供以下关于对象操作的方法<br>
+                <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom:0;">
+                    <tbody>
+                        <tr>
+                            <td>isEmpty(obj)</td>
+                            <td>判断是否空对象，即一个键值对都没有</td>
+                        </tr>
+                        <tr>
+                            <td>size(obj)</td>
+                            <td>计算object中键值对的个数</td>
+                        </tr>
+                        <tr>
+                            <td>clone(obj)</td>
+                            <td>浅克隆对象</td>
+                        </tr>
+                        <tr>
+                            <td>remove(obj, key2Del)</td>
+                            <td>从object删除指定key，返回删除key后的浅克隆对象</td>
+                        </tr>
+                        <tr>
+                            <td>add(obj, obj2Add)</td>
+                            <td>将一个obj加入另一个obj，若原对象已有key，则覆盖，返回添加后的浅克隆对象</td>
+                        </tr>
+                        <tr>
+                            <td>hashCode(obj)</td>
+                            <td>计算一个对象的哈希值</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</body>
+</html>
