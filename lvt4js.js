@@ -352,6 +352,10 @@ if(!TdateRegex) var TdateRegex=LVT.dateRegex;
 LVT.timeRegex = /^(\d)+:(\d{1,2}):(\d{1,2})(:(\d{1,3}))?$/;
 if(!TtimeRegex) var TtimeRegex=LVT.timeRegex;
 
+/** 来自：http://urlregex.com */
+LVT.urlRegex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/;
+if(!TurlRegex) var TurlRegex=LVT.urlRegex;
+
 /** 时间戳格式化为'yyyy-MM-dd HH:mm:ss'函数 */
 LVT.timestampFormat = function(time){
     if(time==null) return;
@@ -632,7 +636,7 @@ LVT.form = {
                 var required = LVT.form.dataAttr.required(ele);
                 if(required && !val) return valid.err(ele);
                 if(!required && !val) return null;
-                try{val=new URL(val).href;}catch(e){return valid.err(ele);}
+                if(!LVT.urlRegex.test(val)) return valid.err(ele);
                 if(ele.val() && val==null) return valid.err(ele);
                 var range = LVT.form.dataAttr.range(ele, valid);
                 if(valid.isFail()) return;
