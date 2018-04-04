@@ -385,8 +385,18 @@ if(!jQuery.timeFormat) jQuery.timeFormat=LVT.timeFormat;
 
 /** 转换序列化的字符串为json数据,出现异常返回null */
 LVT.json = function(jsonStr){
+    var json;
     try{
-        return eval('('+jsonStr+')');
+        json = eval('('+jsonStr+')');
+        if(json) return json;
+    }catch(e){}
+    try{
+        json = JSON.parse(jsonStr);
+        if(json) return json;
+    }catch(e){}
+    try{
+        json = jQuery.parseJSON(jsonStr);
+        if(json) return json;
     }catch(e){}
     return null;
 };
