@@ -353,7 +353,7 @@ LVT.timeRegex = /^(\d)+:(\d{1,2}):(\d{1,2})(:(\d{1,3}))?$/;
 if(!TtimeRegex) var TtimeRegex=LVT.timeRegex;
 
 /** 来自：http://urlregex.com */
-LVT.urlRegex = /^((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)$/;
+LVT.urlRegex = /^((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\?\=\.\!\/\\\w]*))?)$/;
 if(!TurlRegex) var TurlRegex=LVT.urlRegex;
 
 /** 时间戳格式化为'yyyy-MM-dd HH:mm:ss'函数 */
@@ -382,6 +382,18 @@ LVT.timeFormat = function(time){
 };
 if(!TtimeFormat) var TtimeFormat=LVT.timeFormat;
 if(!jQuery.timeFormat) jQuery.timeFormat=LVT.timeFormat;
+
+/** 时间戳格式化为'yyyy-MM-dd'函数 */
+LVT.dateFormat = function(time){
+    if(time==null) return;
+    time = new Date(time);
+    var year = time.getFullYear();
+    var month = time.getMonth() + 1 < 10 ? "0" + (time.getMonth() + 1) : time.getMonth() + 1;
+    var date = time.getDate() < 10 ? "0" + time.getDate() : time.getDate();
+    return year + "-" + month + "-" + date;
+};
+if(!TdateFormat) var TdateFormat=LVT.dateFormat;
+if(!jQuery.dateFormat) jQuery.dateFormat=LVT.dateFormat;
 
 /** 转换序列化的字符串为json数据,出现异常返回null */
 LVT.json = function(jsonStr){
