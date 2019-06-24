@@ -62,6 +62,24 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label class="col-md-3 control-label">普通文本，textarea</label>
+                                    <div class="col-md-9">
+                                        <textarea name="textarea" type="text" class="form-control">HelloWorld textarea</textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">普通文本，text()方法</label>
+                                    <div class="col-md-9">
+                                        <div name="textdiv" data-func="text" style="line-height:27px;padding-top:7px;">HelloWorld div</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">普通文本，html()方法</label>
+                                    <div class="col-md-9">
+                                        <div name="htmldiv" data-func="html" style="line-height:27px;padding-top:7px;" contenteditable="true">HelloWorld contenteditable div</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label class="col-md-2 control-label">复杂数组</label>
                                     <div name="arr" data-type="arr" class="col-md-10">
                                         <div name data-type="obj" style="border:#b7b7b7 1px solid">
@@ -94,6 +112,58 @@
                                                 <label class="col-md-2 control-label">日期</label>
                                                 <div class="col-md-9">
                                                     <input name value="2018-02-14 05:21:00" data-type="date" class="form-control"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">复杂对象</label>
+                                    <div name="obj" data-type="obj" class="col-md-10">
+                                        <div style="border:#b7b7b7 1px solid;margin-top: 10px;">
+                                            <span style="position:relative;top:-9px;background:#fff;padding:0 10px;left:10px;">对象元素1：Checkbox勾选框</span>
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label">Checkbox</label>
+                                                <div class="col-md-9">
+                                                    <input name="checkbox" data-type="bit" type="checkbox"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="border:#b7b7b7 1px solid;margin-top: 10px;">
+                                            <span style="position:relative;top:-9px;background:#fff;padding:0 10px;left:10px;">对象元素2：Radio勾选框</span>
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label">Radio</label>
+                                                <div class="col-md-9">
+                                                    <input name="radio" data-type="bit" type="radio"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="border:#b7b7b7 1px solid;margin-top: 10px;">
+                                            <span style="position:relative;top:-9px;background:#fff;padding:0 10px;left:10px;">对象元素3：Select式勾选，可以有不选态</span>
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label">Select</label>
+                                                <div class="col-md-9">
+                                                    <select name="selectBit" data-type="bit">
+                                                        <option value="">不选</option><option value="true">是</option><option value="false">否</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="border:#b7b7b7 1px solid;margin-top: 10px;">
+                                            <span style="position:relative;top:-9px;background:#fff;padding:0 10px;left:10px;">对象元素4：文本格式的值表示勾选</span>
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label">Text</label>
+                                                <div class="col-md-9">
+                                                    <input name="bitByTxt" data-type="bit" value="true"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="border:#b7b7b7 1px solid;margin-top: 10px;">
+                                            <span style="position:relative;top:-9px;background:#fff;padding:0 10px;left:10px;">对象元素5：链接</span>
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label">Url</label>
+                                                <div class="col-md-9">
+                                                    <input name="url" data-type="url" value="http://www.baidu.com"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -168,6 +238,24 @@
                                     <div class="form-group">
                                         <label class="col-md-2 control-label">arr</label>
                                         <div class="col-md-10">嵌套类型的支持：数组类型，收集后是一个数组，一般应用在列表box型标签如ul,tbody等</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">data-func</label>
+                                <div class="col-md-10">
+                                    收集/设置元素值时调用的元素jQuery对象的方法，如一般默认值是'val'，表示收集元素值时执行ele.val()，设置值时执行ele.val(val)。不同的data-type默认值不同
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">text/int/float/date/time/url</label>
+                                        <div class="col-md-8">val</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">bit</label>
+                                        <div class="col-md-8">valAsBit，这是一个对jQuery扩展的函数，处理checkbox，radio的checked属性的读取，或一般文本元素的值与'true'字符串比较</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">arr/obj</label>
+                                        <div class="col-md-8">无意义</div>
                                     </div>
                                 </div>
                             </div>
