@@ -24,7 +24,7 @@ LVT.cbxRely = {
                 $(":checkbox[group="+groupName+"]").length==$(":checked[group="+groupName+"]").length);
     },
     changeGroup:function(){
-        $(":checkbox[group="+$(this).attr('forgroup')+"]").prop('checked',$(this).prop('checked'));
+        $(":checkbox[group="+$(this).attr('forgroup')+"]").prop('checked',$(this).prop('checked')).change();
     },
     init:function(){
         $(':checkbox[group]').unbind('change',LVT.cbxRely.changeSub).bind('change',LVT.cbxRely.changeSub);
