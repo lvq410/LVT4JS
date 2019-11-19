@@ -764,7 +764,10 @@ LVT.form = {
             },
             getter : function(ele, valid){
                 var func = LVT.form.dataAttr.func(ele);
-                return ele[func]();
+                var val = ele[func]();
+                var required = LVT.form.dataAttr.required(ele);
+                if(required && val==null) return valid.err(ele);
+                return val;
             }
         },
         obj : {
