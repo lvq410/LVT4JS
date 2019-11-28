@@ -528,8 +528,8 @@ if(!jQuery.GMKB) jQuery.GMKB=LVT.GMKB;
 /**
  * jQuery扩展函数，用于读取与设置元素的值，以布尔格式<br>
  * 如果是INPUT，且为checkbox/radio，则prop('checked')<br>
- * 如果是INPUT，且为其他type；或者SELECT；或者TEXTAREA：则读取值val()==''则是null，否则val()=='true',设置值val('true'/'false')<br>
- * 其他元素，读取值text()==''则是null，否则text()=='true',设置值text('true'/'false')
+ * 如果是INPUT，且为其他type；或者SELECT；或者TEXTAREA：则读取值val()==''则是null，否则val()=='true',设置值val(''/'true'/'false')<br>
+ * 其他元素，读取值text()==''则是null，否则text()=='true',设置值text(''/'true'/'false')
  */
 jQuery.fn.valAsBit = function(val){
     switch(this.prop('tagName')){
@@ -537,13 +537,24 @@ jQuery.fn.valAsBit = function(val){
         switch(this.prop('type')){
         case 'checkbox':
         case 'radio':
-            return val==null?this.prop('checked'):this.prop('checked', val?true:false);
+            if(val==null) return this.prop('checked');
+            if('boolean' == typeof val) return this.prop('checked', val);
+            val = val=='true' || val==1;
+            return this.prop('checked', val);
         }
     case 'TEXTAREA':
     case 'SELECT':
-        return val==null?(this.val()==''?null:this.val()=='true'):this.val(val?'true':'false');
+        if(val==null) return this.val()==''?null:this.val()=='true';
+        if('boolean' == typeof val) return this.val(val?'true':'false');
+        if('string'==typeof val && ''==val) return this.val(val);
+        val = val=='true' || val==1;
+        return this.val(val?'true':'false');
     default:
-        return val==null?this.text()=='true':this.text(val?'true':'false');
+        if(val==null) return this.val()==''?null:this.text()=='true';
+        if('boolean' == typeof val) return this.text(val?'true':'false');
+        if('string'==typeof val && ''==val) return this.text(val);
+        val = val=='true' || val==1;
+        return this.text(val?'true':'false');
     }
 };
 /**
@@ -760,7 +771,7 @@ LVT.form = {
         bit : {
             setter : function(ele, val){
                 var func = LVT.form.dataAttr.func(ele);
-                ele[func](val);
+                ele[func](val==null?'':val);
             },
             getter : function(ele, valid){
                 var func = LVT.form.dataAttr.func(ele);
