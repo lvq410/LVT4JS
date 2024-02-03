@@ -349,7 +349,7 @@ if(!$obj) var $obj=LVT.obj;
 LVT.dateRegex = /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/;
 if(!TdateRegex) var TdateRegex=LVT.dateRegex;
 
-LVT.timeRegex = /^(\d)+:(\d{1,2}):(\d{1,2})(:(\d{1,3}))?$/;
+LVT.timeRegex = /^(\d+):(\d{1,2}):(\d{1,2})(:(\d{1,3}))?$/;
 if(!TtimeRegex) var TtimeRegex=LVT.timeRegex;
 
 /** 来自：http://urlregex.com */
