@@ -151,7 +151,7 @@ LVT.loader = {
     gif : LVT.mUrl+'/img/loader.gif',
     init : function(){
         if(LVT.loader.container) return;
-        LVT.loader.container = jQuery('<div style="position:fixed;width:100%;height:100%;background-color:rgba(0,0,0,0.23);z-index:20000;display:none;">'+
+        LVT.loader.container = jQuery('<div style="position:fixed;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.23);z-index:20000;display:none;">'+
             '<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;"><div>'+
             '<div style="text-align:center;"><img src="'+LVT.loader.gif+'"></div>'+
             '<div class="lvt-loader-msger" style="text-align:center;color:white;font-weight:bolder;font-size:xx-large;"></div>'+
